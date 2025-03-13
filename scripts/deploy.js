@@ -1,17 +1,15 @@
 const hre = require("hardhat");
 
 async function main() {
-  const trustedForwarder = "0xDe45b01d5eFB1d30F4ccF65B39056a6aC78Ca81c";
-  const StudentRegistry = await hre.ethers.getContractFactory("StudentRegistry");
-  const studentRegistry = await StudentRegistry.deploy(trustedForwarder);
+    const forwarderAddress = "0x1ae3fC838C97663FDeA8Bcb5a470cb344B9478CF";
 
-  await studentRegistry.waitForDeployment();
-  const contractAddress = await studentRegistry.getAddress();
+    const StudentRegistry = await hre.ethers.deployContract("StudentRegistry", [forwarderAddress]);
+    await StudentRegistry.waitForDeployment();
 
-  console.log("Contract deployed at:", contractAddress);
+    console.log("StudentRegistry deployed to:", await StudentRegistry.getAddress());
 }
 
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exit(1);
 });

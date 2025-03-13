@@ -15,11 +15,18 @@ contract StudentRegistry is ERC2771Context, Ownable {
     event StudentRegistered(address indexed student, string studentID);
     event StudentUpdated(address indexed student, string newStudentID);
 
-    constructor(address _trustedForwarder) ERC2771Context(_trustedForwarder) Ownable(msg.sender) {}
+    constructor(address _trustedForwarder)
+        ERC2771Context(_trustedForwarder)
+        Ownable(msg.sender)
+    {}
 
     modifier notRegistered() {
         require(!students[_msgSender()].registered, "Already registered");
         _;
+    }
+
+    function _contextSuffixLength() internal view virtual override(ERC2771Context, Context) returns (uint256) {
+        return ERC2771Context._contextSuffixLength();
     }
 
     function registerStudent(string memory _studentID) external notRegistered {
@@ -49,9 +56,4 @@ contract StudentRegistry is ERC2771Context, Ownable {
     function _msgData() internal view override(Context, ERC2771Context) returns (bytes calldata) {
         return ERC2771Context._msgData();
     }
-
-    function _contextSuffixLength() internal view override(Context, ERC2771Context) returns (uint256) {
-        return ERC2771Context._contextSuffixLength();
-    }
-
 }
